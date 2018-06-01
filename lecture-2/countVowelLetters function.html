@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>countVowelLetters function</title>
+</head>
+<body>
+<script>
+    function countVowelLetters (phrase){
+        var vowels = /[аоиеёэыуюя]/igm;
+        var count = phrase.match(vowels).length;
+
+        return count;
+    }
+    var spellPhrase = prompt('Введите любую фразу');
+    console.log(countVowelLetters(spellPhrase));
+</script>
+</body>
+</html>
