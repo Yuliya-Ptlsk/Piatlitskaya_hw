@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Palindrome function</title>
+</head>
+<body>
+<script>
+    "use strict";
+    function isPalindrome (phrase) {
+        var punctuation = /[.,\/#!$%\^&\*;:{}=\-_`~()]/g;
+        var space = /\s+/g;
+        var result = true;
+        phrase =
+            phrase.replace(punctuation,'').replace(space,'').toLowerCase().split('ё').join('е').split('ъ').join('ь').split('');
+
+        for (var i=0; i<(Math.round(phrase.length/2)); i++){
+            if (phrase[i] !== phrase[(phrase.length-1)-i]) {
+                result = false;
+                break;
+            }
+
+        }
+        return result;
+    }
+
+    var spellPhrase = prompt('Введите любую фразу');
+    alert(isPalindrome(spellPhrase));
+</script>
+</body>
+</html>
