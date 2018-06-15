@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>count vowel letters</title>
+</head>
+<body>
+
+<script>
+    "use strict";
+    function countVowelLetters_forEach (phrase) {
+        var phraseArr = phrase.toLowerCase().split('');
+        var vowels = ['а','о','и','е','ё','э','ы','у','ю','я'];
+        var vowelsCheckObj = {};
+        for (var i=0; i<vowels.length; i++){
+            var vowel = vowels[i];
+            vowelsCheckObj[vowel]= true;
+        }
+        var count = 0;
+        phraseArr.forEach(function(value){
+            if (value in vowelsCheckObj){
+                count++
+            }
+        });
+        return count
+    }
+
+
+    function countVowelLetters_filter (phrase) {
+        var phraseArr = phrase.toLowerCase().split('');
+        var vowels = ['а','о','и','е','ё','э','ы','у','ю','я'];
+        var vowelsCheckObj = {};
+        for (var i=0; i<vowels.length; i++){
+            var vowel=vowels[i];
+            vowelsCheckObj[vowel]= true;
+        }
+
+        var count = phraseArr.filter(function(value) {
+            return (value in vowelsCheckObj)
+        });
+        return count.length;
+    }
+
+
+    function countVowelLetters_reduce (phrase) {
+        var phraseArr = phrase.toLowerCase().split('');
+        var vowels = ['а','о','и','е','ё','э','ы','у','ю','я'];
+        var vowelsCheckObj = {};
+        for (var i=0; i<vowels.length; i++){
+            var vowel=vowels[i];
+            vowelsCheckObj[vowel]=true;
+        }
+        var result = [];
+        var count = phraseArr.reduce(function(sum, value){
+            if (value in vowelsCheckObj){
+                result.push(value);
+                return result;
+            } else {
+                return result;
+            }
+        },0);
+        return count.length;
+
+    }
+    var spellPhrase = prompt('Введите любую фразу','');
+    console.log(countVowelLetters_forEach(spellPhrase));
+    console.log(countVowelLetters_filter(spellPhrase));
+    console.log(countVowelLetters_reduce(spellPhrase));
+</script>
+</body>
+</html>
