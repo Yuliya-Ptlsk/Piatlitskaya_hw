@@ -49,17 +49,15 @@
         for (var i=0; i<vowels.length; i++){
             var vowel=vowels[i];
             vowelsCheckObj[vowel]=true;
-        }
-        var result = [];
-        var count = phraseArr.reduce(function(sum, value){
-            if (value in vowelsCheckObj){
-                result.push(value);
-                return result;
+        }        
+        var count = phraseArr.reduce(function(result, value){
+            if (value in vowelsCheckObj){                
+                return ++result;
             } else {
                 return result;
             }
         },0);
-        return count.length;
+        return count;
 
     }
     var spellPhrase = prompt('Введите любую фразу','');
