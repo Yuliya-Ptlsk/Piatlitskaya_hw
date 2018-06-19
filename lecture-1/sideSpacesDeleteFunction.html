@@ -8,9 +8,7 @@
 <script>
     function sideSpacesDelete (phrase) {
 
-        var firstSymbol = 0;
-        var lastSymbol = 0;
-        var rightSpaceSymbol = 0;
+        var firstSymbol = 0;              
 
         for (var j=0; j<phrase.length; j++){
             if ( phrase[j] !== ' ') { 
@@ -24,17 +22,13 @@
             }
         }
 
+        var lastSymbol = phrase.length-1;
+
         for (var i=phrase.length-1; i<phrase.length; i--){
             if ( phrase[i] !== ' ') break;
-            rightSpaceSymbol = i;
+            lastSymbol = i-1;
         }
-
-        if (rightSpaceSymbol==0) {
-            lastSymbol=phrase.length-1
-        } else {
-            lastSymbol=phrase.length-1-(phrase.length-rightSpaceSymbol);
-        }
-
+        
         phrase=phrase.slice(firstSymbol,(lastSymbol+1));
         return phrase;
     }
