@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>sideSpacesDelete function</title>
+</head>
+<body>
+<script>
+    function sideSpacesDelete (phrase) {
+
+        var firstSymbol = 0;
+        var lastSymbol = 0;
+        var rightSpaceSymbol = 0;
+
+        for (var j=0; j<phrase.length; j++){
+            if ( phrase[j] !== ' ') { 
+            firstSymbol = j;
+            break;
+            } else {
+                if (j == phrase.length-1){
+                    phrase = '';
+                    return phrase;
+                }
+            }
+        }
+
+        for (var i=phrase.length-1; i<phrase.length; i--){
+            if ( phrase[i] !== ' ') break;
+            rightSpaceSymbol = i;
+        }
+
+        if (rightSpaceSymbol==0) {
+            lastSymbol=phrase.length-1
+        } else {
+            lastSymbol=phrase.length-1-(phrase.length-rightSpaceSymbol);
+        }
+
+        phrase=phrase.slice(firstSymbol,(lastSymbol+1));
+        return phrase;
+    }
+
+    var spellPhrase = prompt('Введите любую фразу');
+    console.log(sideSpacesDelete(spellPhrase));
+</script>
+</body>
+</html>
