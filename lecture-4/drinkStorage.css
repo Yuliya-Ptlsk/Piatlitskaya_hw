@@ -1,0 +1,40 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    height: 100vh;
+    padding-top: 50px;
+    background: url('cocktail.jpg') no-repeat bottom center;
+    background-size: contain;
+    display: flex;
+    justify-content: space-around;
+
+}
+input {
+    margin: 50px 0;
+    width: 280px;
+    height: 50px;
+    box-sizing: border-box;
+    padding: 15px 0;
+    text-align: center;
+    background-image: linear-gradient(360deg,#89ecda,#b3ecec,#fff 80%);
+    border: solid #2f5d65 1px;
+    border-radius: 8px;
+    text-shadow: -1px -1px  1px rgba(126,197,221,0.6), 1px 1px  1px rgba(126,197,221,1);
+    outline: none;
+    cursor: pointer;
+    font-size: 15px;
+    font-style: italic;
+    font-weight: bolder;
+}
+input:active {
+    box-shadow: inset 0 0 0 1px #6b8d8d;
+}
+@media all and (max-width: 1240px){
+    body {
+        flex-flow: wrap;
+        align-content: flex-start;
+    }
+}
