@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>DYN_FORM</title>
+</head>
+<body>
+<script>
+    'use strict';
+    var formDef1=
+        [
+            {label:'Название сайта:',kind:'longtext',name:'sitename'},
+            {label:'URL сайта:',kind:'longtext',name:'siteurl'},
+            {label:'Посетителей в сутки:',kind:'number',name:'visitors'},
+            {label:'E-mail для связи:',kind:'shorttext',name:'email'},
+            {label:'Рубрика каталога:',kind:'combo',name:'division',
+                variants:[{text:'здоровье',value:1},{text:'домашний уют',value:2},{text:'бытовая техника',value:3}]},
+            {label:'Размещение:',kind:'radio',name:'payment',
+                variants:[{text:'бесплатное',value:1},{text:'платное',value:2},{text:'VIP',value:3}]},
+            {label:'Разрешить отзывы:',kind:'check',name:'votes'},
+            {label:'Описание сайта:',kind:'memo',name:'description'},
+            {label:'Опубликовать:',kind:'submit'},
+        ];
+    var formDef2=
+        [
+            {label:'Фамилия:',kind:'longtext',name:'lastname'},
+            {label:'Имя:',kind:'longtext',name:'firstname'},
+            {label:'Отчество:',kind:'longtext',name:'secondname'},
+            {label:'Возраст:',kind:'number',name:'age'},
+            {label:'Зарегистрироваться:',kind:'submit'},
+        ];
+
+    function createForm (tag,elements) {
+        var form = document.createElement(tag);
+        document.body.appendChild(form);
+        form.action = 'http://fe.it-academy.by/TestForm.php';
+        form.method = 'post';
+        form.name = 'myForm';
+        for (var i=0; i < elements.length; i++){
+            var element = document.createElement('p');
+            form.appendChild(element);
+            var str = '';
+            if (elements[i].kind == 'submit') {
+                str = '<label><input type="' + elements[i].kind + '" value="' + elements[i].label +
+                    '"><label>';
+
+            } else if (elements[i].kind == 'combo' ){
+                var itemsForSelect = function (){
+                    var arr = [];
+                    for(var j=0; j<elements[i].variants.length; j++) {
+                        var arrItem =
+                            '<option value="' + elements[i].variants[j].value + '">' + elements[i].variants[j].text + '</option>';
+                        arr.push(arrItem);
+                    }
+                    return arr;
+                };
+                str = '<label>' +
+                    elements[i].label + '<select name="' + elements[i].name + '">' + itemsForSelect().join('') +
+                    '</select></label>';
+            } else if (elements[i].kind == 'radio' ){
+                var itemsRadio = function (){
+                    var arr = [];
+                    for(var k=0; k<elements[i].variants.length; k++) {
+                        var arrItem =
+                            '<input type="' + elements[i].kind + '" value="' + elements[i].variants[k].value + '">' + elements[i].variants[k].text;
+                        arr.push(arrItem);
+                    } return arr;
+                };
+                str ='<label>' + elements[i].label + itemsRadio().join('') + '</label>';
+            } else if (elements[i].kind == 'check'){
+                str = '<label>'+elements[i].label+'<input type="checkbox" name="'+elements[i].name+'">'+'</label>';
+            } else if(elements[i].kind == 'memo'){
+                str = '<label>'+elements[i].label+'<label><br>'+'<textarea>';
+            } else {
+                str = elements[i].label + '<input type="' + elements[i].kind + '" name="' + elements[i].name + '">';
+            }
+            element.innerHTML = str;
+
+        }
+    }
+    createForm ('form', formDef1);
+    createForm ('form', formDef2);
+</script>
+</body>
+</html>
