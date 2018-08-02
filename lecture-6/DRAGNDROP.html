@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background: url('img/basket.png') no-repeat 50% 100%;
+            background-size: 50% 50%;
+            height: 100vh;
+
+        }
+        [src*='apple'] {
+            width: 200px;
+        }
+        [src*='peach'] {
+            width: 200px;
+        }
+        [src*='pineapple']{
+            width: 150px;
+        }
+
+    </style>
+</head>
+<body>
+<div>
+    <img src="img/apple.png">
+    <img src ="img/peach.png">
+    <img src="img/pineapple.png">
+</div>
+</body>
+<script>
+    "use strict";
+    var imgList = document.getElementsByTagName('img');
+
+    for (var i=imgList.length-1; i>=0; i--){
+        var img = imgList[i];
+        img.style.position='absolute';
+        img.style.top = img.offsetTop +'px';
+        img.style.left = img.offsetLeft +'px';
+    }
+
+    document.onmousedown = function objMovement(EO) {
+        EO = EO|| window.event;
+        EO.preventDefault();
+        var img = EO.target;
+        var shiftX = EO.pageX - img.getBoundingClientRect().left;
+        var shiftY = EO.pageY - img.getBoundingClientRect().top;
+        img.style.cursor = 'pointer';
+        document.body.appendChild(img);
+        document.onmousemove = function  (EO) {
+            img.style.left = EO.pageX - shiftX +'px';
+            img.style.top = EO.pageY - shiftY +'px';
+        };
+
+        img.ondragstart = function() {
+            return false;
+        };
+    };
+    document.onmouseup = function(EO){
+        EO = EO||window.event;
+        var img = EO.target;
+        document.onmousemove = null;
+        img.style.cursor = 'default';
+    }
+
+
+</script>
+</html>
