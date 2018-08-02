@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CLOCK_DOM</title>
+
+</head>
+<body>
+    <div class="hour-plate">
+        <div class="hours">1</div>
+        <div class="hours">2</div>
+        <div class="hours">3</div>
+        <div class="hours">4</div>
+        <div class="hours">5</div>
+        <div class="hours">6</div>
+        <div class="hours">7</div>
+        <div class="hours">8</div>
+        <div class="hours ">9</div>
+        <div class="hours">10</div>
+        <div class="hours">11</div>
+        <div class="hours">12</div>
+        <div class="clock-hand second"></div>
+        <div class="clock-hand minute"></div>
+        <div class="clock-hand hour"></div>
+        <div class="time"></div>
+    </div>
+</body>
+<script>
+    'use strict';
+    var secondCH = document.querySelector('.second');
+    var minuteCH = document.querySelector('.minute');
+    var hourCH = document.querySelector('.hour');
+
+    function clockConstructor (){
+        var hourPlate = document.querySelector('.hour-plate');
+        hourPlate.style.cssText = 'width: 250px; height: 250px;border-radius: 50%; background-color: #fcca66; position: relative; top: 100px; margin: auto;';
+        var centerX= hourPlate.offsetWidth/2;
+        var centerY = hourPlate.offsetHeight/2;
+        var hours = document.getElementsByClassName('hours');
+        var radius = hourPlate.offsetWidth/2;
+
+        for (var h = 1, i=0; h <=12, i<hours.length; h++, i++) {
+            var hour = hours[i];
+            var a = h / 12 * Math.PI * 2;
+            //располагаем цифру на циферблате от центра цифебрала на расстоянии  0,82*radius
+            var x = centerX + Math.sin(a) * radius*0.82;
+            var y = centerY - Math.cos(a) * radius*0.82;
+            hour.style.cssText = 'height: 25px; width: 25px; border-radius: 50%; position: absolute; background-color:#48b382; line-height: 25px; text-align: center';
+            hour.style.left = x - hour.offsetWidth/2 + 'px';
+            hour.style.top = y - hour.offsetHeight/2 + 'px';
+        }
+
+        var clockHands = document.getElementsByClassName('clock-hand');
+
+        for (var j=0; j<clockHands.length; j++){
+            var clockHand = clockHands[j];
+            clockHand.style.cssText =
+                'background-color: #2b2a29; border-radius:50px; position: absolute; transform: rotate(-90deg);transform-origin: left center;';
+            clockHand.style.top = centerY +'px';
+            clockHand.style.left = centerX +'px';
+        }
+
+        secondCH.style.height = '2px';
+        //длина секундной стрелки равна 0,9*radius
+        secondCH.style.width = radius*0.9+'px';
+        minuteCH.style.height = '5px';
+        //длина минутной стрелки равна 0,75*radius
+        minuteCH.style.width = radius*0.75+'px';
+        hourCH.style.height = '7px';
+        //длина часово стрелки равна 0,6*radius
+        hourCH.style.width = radius*0.6+'px';
+    }
+    clockConstructor ();
+    function getTime (){
+        var currTime = new Date();
+        var timeStr = document.querySelector('.time');
+        timeStr.style.cssText ='width: 90px; height: 35px; position: absolute; top: 30%; left: 50%; transform: translateX(-50%); text-align:center; vertical-align: middle;font-size: 25px;';
+        timeStr.textContent = currTime.toLocaleTimeString();
+        setTimeout('getTime()',1000);
+    }
+    getTime ();
+
+    function clockHandMovement () {
+        var currTime = new Date();
+
+        function currSecPos() {
+            var second = currTime.getSeconds();
+            var angleS=0;
+            //координаты 0 deg располагаются там, где секундная стрелка равна 15
+            if (second >= 15 && second < 60){
+                angleS = (second - 15)*360/60;
+            } else {
+                if ( (second >= 0 && second < 15) ){
+                    angleS = second*360/60 + 270;
+                }
+            }
+            return angleS;
+        }
+        currSecPos();
+
+        function currMinPos() {
+            var minute = currTime.getMinutes();
+            var angleM = 0;
+            //координаты 0 deg располагаются там, где минутная стрелка равна 15
+            if (minute >= 15 && minute < 60){
+                angleM = (minute - 15)*360/60;
+            } else {
+                if ( (minute >= 0 && minute < 15) ){
+                    angleM = minute*360/60 + 270;
+                }
+            }
+            return angleM;
+        }
+        currMinPos();
+
+        function CurrHourPos() {
+            var hourValue = currTime.getHours();
+            var minValue = currTime.getMinutes();
+            var hour = 0;
+            var angleH =0;
+
+            if (hourValue > 12){
+                hour = hourValue - 12;
+            } else {
+                hour = hourValue;
+            }
+            //координаты 0 deg располагаются там, где часовая стрелка показывает 3
+            if (hour >= 3 && hour <= 12){
+                //для того чтобы часовая стрелка показывала промежуточное значение между целочисленными значениями часов,
+                //добавляем в градусах расстояние,которое проходит минутная стрелка
+                angleH = (hour-3)*360/12 + minValue*360/12/60;
+            } else {
+                if (hour >= 0 && hour < 3) {
+                    angleH = 270 + hour*360/12 + minValue*360/12/60;
+                }
+            }
+            return angleH;
+        }
+        CurrHourPos();
+
+        secondCH.style.transform = 'rotate(' + currSecPos() + 'deg)';
+        minuteCH.style.transform = 'rotate(' + currMinPos() + 'deg)';
+        hourCH.style.transform = 'rotate(' + CurrHourPos() + 'deg)';
+
+        setTimeout('clockHandMovement()',1000);
+    }
+    clockHandMovement();
+</script>
+</html>
