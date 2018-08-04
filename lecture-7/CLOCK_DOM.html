@@ -55,7 +55,7 @@
         for (var j=0; j<clockHands.length; j++){
             var clockHand = clockHands[j];
             clockHand.style.cssText =
-                'background-color: #2b2a29; border-radius:50px; position: absolute; transform: rotate(-90deg);transform-origin: left center;';
+                'background-color: #2b2a29; border-radius:50px; position: absolute; transform-origin: left center;';
             clockHand.style.top = centerY +'px';
             clockHand.style.left = centerX +'px';
         }
@@ -71,17 +71,16 @@
         hourCH.style.width = radius*0.6+'px';
     }
     clockConstructor ();
-    function getTime (){
-        var currTime = new Date();
-        var timeStr = document.querySelector('.time');
-        timeStr.style.cssText ='width: 90px; height: 35px; position: absolute; top: 30%; left: 50%; transform: translateX(-50%); text-align:center; vertical-align: middle;font-size: 25px;';
-        timeStr.textContent = currTime.toLocaleTimeString();
-        setTimeout('getTime()',1000);
-    }
-    getTime ();
 
-    function clockHandMovement () {
+    function showCurrentTime () {
         var currTime = new Date();
+
+        function getTime (){
+            var timeStr = document.querySelector('.time');
+            timeStr.style.cssText ='width: 90px; height: 35px; position: absolute; top: 30%; left: 50%; transform: translateX(-50%); text-align:center; vertical-align: middle;font-size: 25px;';
+            timeStr.textContent = currTime.toLocaleTimeString();
+        }
+        getTime ();
 
         function currSecPos() {
             var second = currTime.getSeconds();
@@ -141,9 +140,9 @@
         secondCH.style.transform = 'rotate(' + currSecPos() + 'deg)';
         minuteCH.style.transform = 'rotate(' + currMinPos() + 'deg)';
         hourCH.style.transform = 'rotate(' + CurrHourPos() + 'deg)';
-
-        setTimeout('clockHandMovement()',1000);
     }
-    clockHandMovement();
+    showCurrentTime();
+    setInterval(showCurrentTime,1000);
+
 </script>
 </html>
