@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CLOCK_SVG</title>
+</head>
+<body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+
+</head>
+
+<body>
+<div class="container" style="margin-top: 100px; text-align: center; position: relative;">
+    <div class="time"></div>
+</div>
+<script>
+    'use strict';
+
+    function clockConstructor (){
+        var container = document.querySelector('.container');
+        var SVG = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        SVG.setAttribute('style','width: 250px; height: 250px;');
+        container.appendChild(SVG);
+        //строим циферблат часов
+        var hourPlate = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        hourPlate.setAttribute('fill','#fcca66');
+        hourPlate.setAttribute('cx','125');
+        hourPlate.setAttribute('cy','125');
+        hourPlate.setAttribute('r','125');
+        var centerX = hourPlate.getAttribute('cx');
+        var centerY = hourPlate.getAttribute('cy');
+        var radius = hourPlate.getAttribute('r');
+        SVG.appendChild(hourPlate);
+
+        //строим на циферблате окружности для чисел
+        for (var h=1; h<=12;h++){
+            var hour = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            var a = h / 12 * Math.PI * 2;
+            var xC = parseInt(centerX) + Math.sin(a) * parseInt(radius)*0.82;
+            var yC = parseInt(centerY) - Math.cos(a) * parseInt(radius)*0.82;
+            hour.setAttribute('cx',xC);
+            hour.setAttribute('cy',yC);
+            hour.setAttribute('r',12.5);
+            hour.setAttribute('fill','#48b382' );
+            SVG.appendChild(hour);
+            //вписываем числа в окружности
+            var text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            var align = hour.getAttribute('r')/2;//выравниваем по вертикали числа
+            text.setAttribute('x',xC);
+            text.setAttribute('y',yC+align);
+            text.setAttribute('text-anchor','middle');
+            text.setAttribute('style','font-size:20px; line-height: 25px; color: #000');
+            text.textContent = h;
+            SVG.appendChild(text);
+        }
+
+        //строим секундную, минутную, часовую стрелки
+        for(var k=1;k<=3;k++){
+            var clockHand = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            clockHand.setAttribute('x', centerX);
+            console.log(clockHand.getAttribute('x'));
+            clockHand.setAttribute('y', centerY);
+            console.log(clockHand.getAttribute('y'));
+            clockHand.setAttribute('fill', '#000');
+            clockHand.setAttribute('rx', '3');
+            clockHand.setAttribute('ry', '3');
+            clockHand.setAttribute('class','clock-hand');
+            clockHand.setAttribute('style','opacity:0.8; transform-origin: 50.5% 50.5%');
+            SVG.appendChild(clockHand);
+        }
+        var hands = document.querySelectorAll('.clock-hand');
+        for(var i=0; i<hands.length; i++){
+            hands[0].setAttribute('id','second');
+            hands[1].setAttribute('id','minute');
+            hands[2].setAttribute('id','hour');
+        }
+        var secondHand = document.getElementById('second');
+        var minuteHand = document.getElementById('minute');
+        var hourHand = document.getElementById('hour');
+        secondHand.setAttribute('width',0.9*radius);
+        secondHand.setAttribute('height',2);
+        minuteHand.setAttribute('width',0.75*radius);
+        minuteHand.setAttribute('height',5);
+        hourHand.setAttribute('width',0.6*radius);
+        hourHand.setAttribute('height',7);
+    }
+    clockConstructor ();
+
+    function showCurrentTime () {
+        var currTime = new Date();
+
+        function getTime (){
+            var timeStr = document.querySelector('.time');
+            timeStr.style.cssText ='width: 90px; height: 35px; position: absolute; top: 30%; left: 50%; transform: translateX(-50%); text-align:center; vertical-align: middle;font-size: 25px;';
+            timeStr.textContent = currTime.toLocaleTimeString();
+        }
+        getTime ();
+
+        function currSecPos() {
+            var second = currTime.getSeconds();
+            var angleS=0;
+            //координаты 0 deg располагаются там, где секундная стрелка равна 15
+            if (second >= 15 && second < 60){
+                angleS = (second - 15)*360/60;
+            } else {
+                if ( (second >= 0 && second < 15) ){
+                    angleS = second*360/60 + 270;
+                }
+            }
+            return angleS;
+        }
+        currSecPos();
+
+        function currMinPos() {
+            var minute = currTime.getMinutes();
+            var angleM = 0;
+            //координаты 0 deg располагаются там, где минутная стрелка равна 15
+            if (minute >= 15 && minute < 60){
+                angleM = (minute - 15)*360/60;
+            } else {
+                if ( (minute >= 0 && minute < 15) ){
+                    angleM = minute*360/60 + 270;
+                }
+            }
+            return angleM;
+        }
+        currMinPos();
+
+        function CurrHourPos() {
+            var hourValue = currTime.getHours();
+            var minValue = currTime.getMinutes();
+            var hour = 0;
+            var angleH =0;
+
+            if (hourValue > 12){
+                hour = hourValue - 12;
+            } else {
+                hour = hourValue;
+            }
+            //координаты 0 deg располагаются там, где часовая стрелка показывает 3
+            if (hour >= 3 && hour <= 12){
+                //для того чтобы часовая стрелка показывала промежуточное значение между целочисленными значениями часов,
+                //добавляем в градусах расстояние,которое проходит минутная стрелка
+                angleH = (hour-3)*360/12 + minValue*360/12/60;
+            } else {
+                if (hour >= 0 && hour < 3) {
+                    angleH = 270 + hour*360/12 + minValue*360/12/60;
+                }
+            }
+            return angleH;
+        }
+        CurrHourPos();
+        var secondHand = document.getElementById('second');
+        var minuteHand = document.getElementById('minute');
+        var hourHand = document.getElementById('hour');
+
+        secondHand.style.transform = 'rotate(' + currSecPos() + 'deg)';
+        minuteHand.style.transform = 'rotate(' + currMinPos() + 'deg)';
+        hourHand.style.transform = 'rotate(' + CurrHourPos() + 'deg)';
+    }
+    showCurrentTime();
+    setInterval(showCurrentTime,1000);
+</script>
+</body>
+</html>
