@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CLOCK_CANVAS</title>
+</head>
+<body>
+<div style="margin-top: 100px; text-align: center; position: relative;">
+    <canvas id="canvas" width="250" height="250"></canvas>
+    <div class="time"></div>
+</div>
+<script>
+    function clockConstructor (){
+        var cvs = document.getElementById('canvas');
+        var context = cvs.getContext('2d');
+        var centerX = 125;
+        var centerY = 125;
+        var radiusP = 125;
+        var radiusH = 12.5;
+        //рисуем циферблат часов
+        context.fillStyle = '#fcca66';
+        context.beginPath();
+        context.arc(centerX,centerY,radiusP,0,Math.PI*2,false);
+        context.fill();
+        //рисуем окружности с цифрами внутри
+        for (var h=1; h<=12; h++){
+            var a = h / 12 * Math.PI * 2;
+            var xC = parseInt(centerX) + Math.sin(a) * parseInt(radiusP)*0.82;
+            var yC = parseInt(centerY) - Math.cos(a) * parseInt(radiusP)*0.82;
+
+            context.fillStyle = '#48b382';
+            context.beginPath();
+            context.arc(xC,yC,radiusH,0,Math.PI*2,false);
+            context.fill();
+
+            context.fillStyle='#000';
+            context.font = 'normal 17px Arial';
+            context.fillText(h,xC,yC);
+            context.textAlign = 'center';
+            context.textBaseline = 'middle';
+        }
+
+        function showCurrentTime () {
+            var currTime = new Date();
+
+            function getTime (){
+                var timeStr = document.querySelector('.time');
+                timeStr.style.cssText ='width: 90px; height: 35px; position: absolute; top: 30%; left: 50%; transform: translateX(-50%); text-align:center; vertical-align: middle;font-size: 25px;';
+                timeStr.textContent = currTime.toLocaleTimeString();
+            }
+            getTime ();
+
+            function currSecPos() {
+                var second = currTime.getSeconds();
+                var angleS;
+                angleS = second/60* Math.PI * 2;
+                return angleS;
+            }
+            currSecPos();
+
+            function currMinPos() {
+                var minute = currTime.getMinutes();
+                var angleM;
+                angleM = minute/60* Math.PI * 2;
+                return angleM;
+            }
+            currMinPos();
+
+            function currHourPos() {
+                var hourValue = currTime.getHours();
+                var minValue = currTime.getMinutes();
+                var hour = 0;
+                var angleH;
+
+                if (hourValue > 12){
+                    hour = hourValue - 12;
+                } else {
+                    hour = hourValue;
+                }
+                angleH = hour/12*Math.PI*2 + minValue/60/12*Math.PI*2;
+                return angleH;
+            }
+            currHourPos();
+            //рисуем секундную стрелку
+            function secondHand(){
+                var x2S = parseInt(centerX) + Math.sin(currSecPos()) * parseInt(radiusP)*0.82;
+                var y2S = parseInt(centerY) - Math.cos(currSecPos()) * parseInt(radiusP)*0.82;
+                context.strokeStyle='rgba(0,0,0,0.7)';
+                context.lineCap='round';
+                context.lineWidth='2';
+                context.beginPath();
+                context.moveTo(centerX,centerY);
+                context.lineTo(x2S,y2S);
+                context.stroke();
+            }
+            secondHand();
+            //рисуем минутную стрелку
+            function minuteHand (){
+                var x2M = parseInt(centerX) + Math.sin(currMinPos()) * parseInt(radiusP)*0.75;
+                var y2M = parseInt(centerY) - Math.cos(currMinPos()) * parseInt(radiusP)*0.75;
+                context.lineWidth='5';
+                context.beginPath();
+                context.moveTo(centerX,centerY);
+                context.lineTo(x2M,y2M);
+                context.stroke();
+            }
+            minuteHand();
+            //рисуем часовую стрелку
+            function hourHand (){
+                var x2H = parseInt(centerX) + Math.sin(currHourPos()) * parseInt(radiusP)*0.6;
+                var y2H = parseInt(centerY) - Math.cos(currHourPos()) * parseInt(radiusP)*0.6;
+                context.lineWidth='7';
+                context.beginPath();
+                context.moveTo(centerX,centerY);
+                context.lineTo(x2H,y2H);
+                context.stroke();
+            }
+            hourHand();
+        }
+        showCurrentTime();
+    }
+    clockConstructor ();
+
+    setInterval(clockConstructor,1000);
+</script>
+</body>
+</html>
